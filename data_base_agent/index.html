@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>data_base_agent · 文献检索需求翻译 Agent</title>
+<meta name="description" content="data_base_agent：面向上海交通大学学生的智能文献检索辅助工具，用对话澄清研究想法，生成结构化检索方案并自动获取论文。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5' fill='none' stroke='%23a78bfa' stroke-width='2'/%3E%3Cpath d='m15.5 15.5 5 5' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../css/product.css">
+</head>
+<body class="theme-violet">
+<div class="p-bg" aria-hidden="true"></div>
+
+<header class="p-topbar">
+  <a class="p-logo" href="#top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M8 10.5h5M10.5 8v5"/></svg>
+    <span><b>data_base_agent</b></span>
+  </a>
+  <nav class="p-topnav" aria-label="页面导航">
+    <a class="p-hide-sm" href="#features">核心能力</a>
+    <a class="p-hide-sm" href="#workflow">工作流程</a>
+    <a class="p-hide-sm" href="#quickstart">快速开始</a>
+    <a class="p-btn p-btn-ghost p-btn-sm" href="../index.html">个人主页</a>
+    <a class="p-btn p-btn-primary p-btn-sm" href="https://github.com/weixiao-czy/data_base_agent" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      GitHub
+    </a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="p-hero p-wrap">
+    <p class="p-eyebrow up up-1">AI AGENT · ACADEMIC LITERATURE SEARCH</p>
+    <h1 class="up up-2">data_base_agent</h1>
+    <p class="p-tagline up up-3">把模糊的研究想法，翻译成精准的文献检索方案。</p>
+    <p class="p-desc up up-4">
+      面向上海交通大学学生的智能文献检索辅助工具。用多轮对话澄清你的研究问题，
+      生成结构化的「需求翻译卡」，再自动完成检索，返回论文元数据、摘要、DOI 与 BibTeX。
+    </p>
+    <div class="p-cta up up-4">
+      <a class="p-btn p-btn-primary" href="https://github.com/weixiao-czy/data_base_agent" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        查看 GitHub 仓库
+      </a>
+      <a class="p-btn p-btn-ghost" href="#quickstart">快速开始</a>
+    </div>
+    <ul class="p-meta up up-5">
+      <li>PYTHON 3.8+</li>
+      <li>MCP 协议</li>
+      <li>CLI + GUI 双端</li>
+      <li>状态机对话控制</li>
+    </ul>
+
+    <figure class="p-frame up up-5">
+      <div class="p-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>data_base_agent · product preview</span></div>
+      <img src="../assets/promo-dba.jpg" alt="data_base_agent 产品宣传图：对话澄清、需求翻译卡与文献引用网络">
+    </figure>
+  </section>
+
+  <section class="p-section p-wrap" id="problems">
+    <header class="p-sec-head">
+      <p class="p-sec-idx">01 / PROBLEM</p>
+      <h2>检索文献时，你是否也卡在第一步？</h2>
+    </header>
+    <ul class="p-pains">
+      <li><b>不知道用什么关键词</b>想搜文献，却迟迟想不出合适的检索词。</li>
+      <li><b>结果太多太杂</b>检索返回海量条目，真正相关的却藏在噪声里。</li>
+      <li><b>问题表述不清</b>不清楚自己的研究问题该如何准确表述。</li>
+    </ul>
+  </section>
+
+  <section class="p-section p-wrap" id="features">
+    <header class="p-sec-head">
+      <p class="p-sec-idx">02 / FEATURES</p>
+      <h2>核心能力</h2>
+      <p>从「一句话想法」到「可执行的检索方案 + 论文列表」，全程对话式完成。</p>
+    </header>
+    <div class="p-features">
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.8-.3-4-1L3 20l1.1-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg></div>
+        <h3>智能对话澄清</h3>
+        <p>最多 10 轮交互澄清需求，主动给出假设供你确认或纠正，可随时跳过或退出。</p>
+      </div>
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+        <h3>需求翻译卡</h3>
+        <p>输出结构化检索计划：问题解读、关键词组合、查询建议与不确定性标注，YAML 格式可复用。</p>
+      </div>
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></div>
+        <h3>多源文献检索</h3>
+        <p>SciMaster MCP 优先检索；未配置或失败时自动回退 Crossref 与 arXiv 免费接口。</p>
+      </div>
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div>
+        <h3>结构化结果</h3>
+        <p>返回元数据、摘要、URL、DOI 与 BibTeX，直接可用于论文写作与引用管理。</p>
+      </div>
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9l3 2.5L7 14M13 14h4"/></svg></div>
+        <h3>CLI + GUI 双端</h3>
+        <p>终端命令行与桌面图形界面两种入口，按习惯自由选择。</p>
+      </div>
+      <div class="p-feature">
+        <div class="p-ico"><svg viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7Z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg></div>
+        <h3>一键打包分发</h3>
+        <p>内置 PyInstaller 打包脚本，一条命令生成可分发的 EXE。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="p-section p-wrap" id="workflow">
+    <header class="p-sec-head">
+      <p class="p-sec-idx">03 / WORKFLOW</p>
+      <h2>工作流程</h2>
+    </header>
+    <ol class="p-steps">
+      <li><b>描述想法</b>用一句话写下你模糊的研究兴趣。</li>
+      <li><b>对话澄清</b>Agent 复述理解并追问关键细节，直至对齐。</li>
+      <li><b>确认翻译卡</b>生成需求翻译卡，你确认或修改检索计划。</li>
+      <li><b>检索交付</b>自动检索并展示论文结果与引用信息。</li>
+    </ol>
+  </section>
+
+  <section class="p-section p-wrap" id="quickstart">
+    <header class="p-sec-head">
+      <p class="p-sec-idx">04 / QUICKSTART</p>
+      <h2>快速开始</h2>
+    </header>
+    <div class="p-code">
+      <div class="p-code-head"><span>TERMINAL</span><span>bash</span></div>
+      <pre><span class="c"># 1. 安装依赖</span>
+<span class="p">$</span> pip install -r requirements.txt
+
+<span class="c"># 2. 配置（可选：填入 SciMaster API Key）</span>
+<span class="p">$</span> cp .env.example .env
+
+<span class="c"># 3. 启动：CLI 或 GUI</span>
+<span class="p">$</span> python src/main.py
+<span class="p">$</span> python gui_launcher.py
+
+<span class="c"># 4. 可选：打包为 EXE</span>
+<span class="p">$</span> pip install pyinstaller &amp;&amp; python build_exe.py</pre>
+    </div>
+  </section>
+
+  <section class="p-section p-wrap" id="specs">
+    <header class="p-sec-head">
+      <p class="p-sec-idx">05 / SPECS</p>
+      <h2>技术规格</h2>
+    </header>
+    <dl class="p-specs">
+      <div><dt>LANGUAGE</dt><dd>Python 3.8+</dd></div>
+      <div><dt>ARCHITECTURE</dt><dd>状态机对话控制</dd></div>
+      <div><dt>PROTOCOL</dt><dd>MCP（SciMaster）</dd></div>
+      <div><dt>SOURCES</dt><dd>SciMaster · Crossref · arXiv</dd></div>
+      <div><dt>SERIALIZATION</dt><dd>PyYAML 需求卡</dd></div>
+      <div><dt>INTERFACE</dt><dd>CLI / 桌面 GUI</dd></div>
+    </dl>
+  </section>
+
+  <section class="p-wrap">
+    <div class="p-cta-band">
+      <h2>现在就把想法变成检索方案</h2>
+      <p>源码开源在 GitHub，欢迎 Star、Issue 与 PR。</p>
+      <a class="p-btn p-btn-primary" href="https://github.com/weixiao-czy/data_base_agent" target="_blank" rel="noopener">github.com/weixiao-czy/data_base_agent</a>
+    </div>
+  </section>
+</main>
+
+<footer class="p-footer p-wrap">
+  <p>data_base_agent · © 2026 陈郑砚 Harry · <a href="https://github.com/weixiao-czy/data_base_agent" target="_blank" rel="noopener">GitHub</a> · <a href="../index.html">返回个人主页</a></p>
+  <p class="p-fmono">// FROM VAGUE IDEA TO PRECISE SEARCH</p>
+</footer>
+</body>
+</html>

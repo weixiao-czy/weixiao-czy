@@ -6,9 +6,9 @@
   /* ---------- 打字机 ---------- */
   var typingEl = document.getElementById('typingText');
   var phrases = [
-    '信息安全爱好者 / Cybersecurity Enthusiast',
-    '上海交通大学 · 电院 · 2026 级本科新生',
-    '用代码与护盾守护数字世界 _'
+    '热爱编程 / Code Lover',
+    '上海交通大学 · 2026 级本科新生',
+    '把想法变成能跑起来的项目 _'
   ];
   if (reduceMotion) {
     typingEl.textContent = phrases[0];
