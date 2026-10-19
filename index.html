@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈郑砚 Harry · 个人作品集</title>
+<meta name="description" content="陈郑砚（Harry）的个人作品集 —— 上海交通大学电子信息与电气工程学院 2026 级本科新生，热爱信息安全。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 88 18v30c0 26-18 42-38 48C30 90 12 74 12 48V18Z' fill='none' stroke='%2338bdf8' stroke-width='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 背景层：虚化地球 + 前景粒子 -->
+<canvas id="globe" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="bg-glow" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- 左上标识 -->
+<a class="brand" href="#home">
+  <svg viewBox="0 0 100 100" class="brand-shield" aria-hidden="true">
+    <path d="M50 4 88 18v30c0 26-18 42-38 48C30 90 12 74 12 48V18Z"/>
+    <path class="brand-core" d="M50 30v40M36 44h28"/>
+  </svg>
+  <span class="brand-text">HARRY<span class="brand-dot">.</span>CHEN</span>
+</a>
+
+<!-- 右上角侧栏导航 -->
+<nav class="side-nav" id="sideNav" aria-label="站点导航">
+  <a href="#home" class="nav-item is-active" data-target="home">
+    <span class="nav-idx">01</span><span class="nav-label">首页</span><span class="nav-bar"></span>
+  </a>
+  <a href="#works" class="nav-item" data-target="works">
+    <span class="nav-idx">02</span><span class="nav-label">作品</span><span class="nav-bar"></span>
+  </a>
+  <a href="#contact" class="nav-item" data-target="contact">
+    <span class="nav-idx">03</span><span class="nav-label">联系方式</span><span class="nav-bar"></span>
+  </a>
+</nav>
+
+<main>
+  <!-- ============ 首页 ============ -->
+  <section class="section hero" id="home">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">SHANGHAI JIAO TONG UNIVERSITY · SEIEE</p>
+        <h1 class="reveal">陈郑砚<span class="name-en">Harry</span></h1>
+        <p class="typing-line reveal">
+          <span class="typing-caret" aria-hidden="true"></span>
+          <span id="typingText"></span>
+        </p>
+        <p class="hero-desc reveal">
+          你好，我是陈郑砚（Harry），上海交通大学电子信息与电气工程学院 2026 级本科新生。
+          我热爱信息安全，相信代码与护盾能够守护这个数字世界。
+        </p>
+        <ul class="chips reveal">
+          <li>信息安全</li>
+          <li>Python</li>
+          <li>C++</li>
+          <li>Web 开发</li>
+        </ul>
+        <div class="hero-actions reveal">
+          <a class="btn btn-primary" href="#works">查看作品</a>
+          <a class="btn btn-ghost" href="#contact">联系我</a>
+        </div>
+        <ul class="stats reveal">
+          <li><span class="stats-v">2026</span><span class="stats-k">级本科新生</span></li>
+          <li><span class="stats-v">SEIEE</span><span class="stats-k">电子信息与电气工程学院</span></li>
+          <li><span class="stats-v">SEC</span><span class="stats-k">信息安全方向</span></li>
+        </ul>
+      </div>
+
+      <!-- 护盾头像 -->
+      <div class="hero-shield reveal" id="shieldWrap">
+        <div class="shield-aura" aria-hidden="true"></div>
+        <svg class="shield-svg" viewBox="0 0 200 230" aria-hidden="true">
+          <defs>
+            <linearGradient id="shieldStroke" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7dd3fc"/>
+              <stop offset="50%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#2563eb"/>
+            </linearGradient>
+            <clipPath id="avatarClip"><circle cx="100" cy="98" r="62"/></clipPath>
+          </defs>
+          <path class="shield-outline" d="M100 8 178 36v62c0 54-36 88-78 104C58 186 22 152 22 98V36Z"/>
+          <path class="shield-outline shield-inner" d="M100 22 166 46v52c0 46-30 76-66 90-36-14-66-44-66-90V46Z"/>
+          <g clip-path="url(#avatarClip)">
+            <image href="assets/avatar.jpg" x="38" y="36" width="124" height="124" preserveAspectRatio="xMidYMin slice"/>
+          </g>
+          <circle class="shield-ring" cx="100" cy="98" r="62"/>
+          <circle class="shield-ring shield-ring-2" cx="100" cy="98" r="68"/>
+        </svg>
+        <div class="shield-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 20 5v6c0 5.2-3.4 8.9-8 11-4.6-2.1-8-5.8-8-11V5Z"/><path d="M9 11.5l2.2 2.2L15.5 9" fill="none" stroke-width="1.8"/></svg>
+          <span>信息安全 · INFOSEC</span>
+        </div>
+        <p class="shield-caption">// GUARDING THE DIGITAL WORLD</p>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#works" aria-label="向下滚动">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ============ 作品 ============ -->
+  <section class="section" id="works">
+    <header class="section-head reveal">
+      <p class="section-idx">02 / WORKS</p>
+      <h2>作品</h2>
+      <p class="section-sub">我的项目与作品将在这里展示，每件作品附有超链接与简要介绍。</p>
+    </header>
+
+    <div class="works-grid">
+      <!-- 新增作品时：复制下面这个 article 卡片，替换链接、标题与介绍即可 -->
+      <article class="work-card work-card-empty reveal">
+        <div class="work-thumb">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18" fill="none"/></svg>
+        </div>
+        <h3>更多作品 · 即将上线</h3>
+        <p>作品区正在建设中，敬请期待。</p>
+        <span class="work-tag">COMING SOON</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 联系方式 ============ -->
+  <section class="section" id="contact">
+    <header class="section-head reveal">
+      <p class="section-idx">03 / CONTACT</p>
+      <h2>联系方式</h2>
+      <p class="section-sub">欢迎交流信息安全、编程与任何有趣的想法。</p>
+    </header>
+
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none"/><path d="m3 7 9 6 9-6" fill="none"/></svg>
+        </div>
+        <p class="contact-k">邮箱 EMAIL</p>
+        <p class="contact-v" id="emailText">harry20080428@sjtu.edu.cn</p>
+        <div class="contact-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-copy="harry20080428@sjtu.edu.cn">复制</button>
+          <a class="btn btn-ghost btn-sm" href="mailto:harry20080428@sjtu.edu.cn">发送邮件</a>
+        </div>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.8-.3-4-1L3 20l1.1-5.2A8.5 8.5 0 1 1 21 11.5Z" fill="none"/><path d="M8.5 11.5h.01M12.5 11.5h.01M16.5 11.5h.01" stroke-width="2.2"/></svg>
+        </div>
+        <p class="contact-k">微信 WECHAT</p>
+        <p class="contact-v" id="wechatText">weixiao20190228</p>
+        <p class="contact-note">添加请备注来意</p>
+        <div class="contact-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-copy="weixiao20190228">复制</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>© 2026 陈郑砚 Harry · Shanghai Jiao Tong University</p>
+  <p class="footer-mono">// built with curiosity &amp; shields</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

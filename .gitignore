@@ -1,0 +1,5 @@
+node_modules/
+.tmp-crop/
+tools/
+preview-*.png
+本人照片.jpg
