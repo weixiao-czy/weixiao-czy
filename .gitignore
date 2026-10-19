@@ -2,4 +2,7 @@ node_modules/
 .tmp-crop/
 tools/
 preview-*.png
+vibe_images/
+package.json
+package-lock.json
 本人照片.jpg
