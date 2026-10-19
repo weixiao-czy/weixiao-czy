@@ -167,7 +167,7 @@ ul, ol { list-style: none; }
 .p-frame-bar i { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: rgba(148, 163, 184, 0.35); }
 .p-frame-bar i:first-child { background: rgba(var(--accent-rgb), 0.7); }
 .p-frame-bar span { margin-left: 0.6rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; color: var(--muted); }
-.p-frame img { display: block; width: 100%; height: auto; }
+.p-frame img, .p-frame video { display: block; width: 100%; height: auto; }
 
 /* 区块 */
 .p-section { padding: 5rem 0 0; }
