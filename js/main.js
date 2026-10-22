@@ -1,290 +1,236 @@
 (function () {
   'use strict';
+  var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var hero = document.getElementById('home');
+  var heroVisible = true;
 
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ---------- 打字机 ---------- */
-  var typingEl = document.getElementById('typingText');
-  var phrases = [
-    '热爱编程 / Code Lover',
-    '上海交通大学 · 2026 级本科新生',
-    '把想法变成能跑起来的项目 _'
-  ];
-  if (reduceMotion) {
-    typingEl.textContent = phrases[0];
-  } else {
-    var pi = 0, ci = 0, deleting = false;
-    (function typeLoop() {
-      var full = phrases[pi];
-      ci += deleting ? -1 : 1;
-      typingEl.textContent = full.slice(0, ci);
-      var delay = deleting ? 34 : 78;
-      if (!deleting && ci === full.length) { delay = 1900; deleting = true; }
-      else if (deleting && ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; delay = 420; }
-      setTimeout(typeLoop, delay);
-    })();
+  /* A bounded star field: tiny CSS layers, no particle simulation. */
+  var starfield = document.getElementById('starfield');
+  var planet = document.getElementById('planetSystem');
+  var starCount = window.matchMedia('(max-width: 650px)').matches ? 16 : 38;
+  var stars = document.createDocumentFragment();
+  for (var starIndex = 0; starIndex < starCount; starIndex++) {
+    var star = document.createElement('span');
+    star.className = 'star space-motion';
+    star.style.cssText = 'left:' + (starIndex * 61.803 % 100) + '%;top:' +
+      (starIndex * 37.917 % 96) + '%;--star-size:' + (starIndex % 6 === 0 ? 3 : 2) +
+      'px;--twinkle:' + (3.5 + starIndex % 6) + 's;animation-delay:-' + (starIndex % 9) + 's';
+    stars.appendChild(star);
   }
+  starfield.appendChild(stars);
 
-  /* ---------- 滚动入场 ---------- */
-  var revealEls = document.querySelectorAll('.reveal');
-  revealEls.forEach(function (el, i) {
-    el.style.setProperty('--rd', (i % 6) * 0.08 + 's');
+  /* One-shot, staggered entrances. Unobserved content stays visible if JS fails. */
+  document.querySelectorAll('.section').forEach(function (section) {
+    section.querySelectorAll('.reveal').forEach(function (el, i) {
+      el.style.setProperty('--rd', Math.min(i % 7, 5) * 65 + 'ms');
+    });
   });
-  function inViewport(el) {
-    var vh = window.innerHeight || document.documentElement.clientHeight || 900;
-    return el.getBoundingClientRect().top < vh * 0.92;
-  }
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    var ro = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('is-visible'); ro.unobserve(e.target); }
-      });
-    }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
-    revealEls.forEach(function (el) {
-      if (inViewport(el)) el.classList.add('is-visible');
-      else ro.observe(el);
-    });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
-  }
-
-  /* ---------- 导航高亮 ---------- */
-  var navItems = document.querySelectorAll('.nav-item');
-  var sections = document.querySelectorAll('.section');
-  function setActive(id) {
-    navItems.forEach(function (a) {
-      a.classList.toggle('is-active', a.dataset.target === id);
-    });
-  }
   if ('IntersectionObserver' in window) {
-    var no = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
-    }, { rootMargin: '-42% 0px -52% 0px' });
-    sections.forEach(function (s) { no.observe(s); });
-  }
+    var entrance = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          entrance.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .06 });
+    document.querySelectorAll('.reveal').forEach(function (el) { entrance.observe(el); });
 
-  /* ---------- 复制按钮 ---------- */
-  var toast = document.getElementById('toast');
-  var toastTimer = null;
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('is-show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toast.classList.remove('is-show'); }, 1800);
+    var navigation = document.querySelectorAll('.nav-item');
+    var sections = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        navigation.forEach(function (link) {
+          var active = link.dataset.target === entry.target.id;
+          link.classList.toggle('is-active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-28% 0px -48% 0px' });
+    document.querySelectorAll('.section').forEach(function (section) { sections.observe(section); });
+
+    new IntersectionObserver(function (entries) {
+      heroVisible = entries[0].isIntersecting;
+      document.body.classList.toggle('past-hero', !heroVisible);
+      syncMotion();
+    }).observe(hero);
   }
+  function syncMotion() {
+    document.body.classList.toggle('motion-paused', document.hidden || !heroVisible || motion.matches);
+  }
+  document.addEventListener('visibilitychange', syncMotion);
+  motion.addEventListener('change', syncMotion);
+  syncMotion();
+
+  /* Pointer feedback is scoped to the hero and schedules at most one frame per event burst. */
+  var shield = document.querySelector('.shield-svg');
+  var pointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var pointerFrame = 0;
+  var pointerX = 0, pointerY = 0;
+  hero.addEventListener('pointermove', function (event) {
+    if (motion.matches || !pointer.matches) return;
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+    if (pointerFrame) return;
+    pointerFrame = requestAnimationFrame(function () {
+      pointerFrame = 0;
+      var rect = hero.getBoundingClientRect();
+      var x = Math.max(-.5, Math.min(.5, (pointerX - rect.left) / rect.width - .5));
+      var y = Math.max(-.5, Math.min(.5, (pointerY - rect.top) / rect.height - .5));
+      shield.style.transform = 'perspective(900px) rotateY(' + x * 11 + 'deg) rotateX(' + -y * 8 + 'deg)';
+      planet.style.setProperty('--space-x', x * -18 + 'px');
+      planet.style.setProperty('--space-y', y * -12 + 'px');
+      starfield.style.transform = 'translate3d(' + x * 9 + 'px,' + y * 7 + 'px,0)';
+    });
+  }, { passive: true });
+  hero.addEventListener('pointerleave', function () {
+    cancelAnimationFrame(pointerFrame);
+    pointerFrame = 0;
+    shield.style.transform = '';
+    planet.style.removeProperty('--space-x');
+    planet.style.removeProperty('--space-y');
+    starfield.style.transform = '';
+  });
+
+  /* Copy still works in local-file previews as well as on HTTPS. */
+  var toast = document.getElementById('toast');
+  var toastTimer;
   function fallbackCopy(text) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
+    var field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(field);
+    field.select();
     var ok = false;
-    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-    document.body.removeChild(ta);
+    try { ok = document.execCommand('copy'); } catch (_) { /* Keep a readable failure message. */ }
+    field.remove();
     return ok;
   }
-  document.querySelectorAll('[data-copy]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var text = btn.dataset.copy;
-      var done = function (ok) { showToast(ok ? '已复制 // ' + text : '复制失败，请手动选择'); };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
-      } else {
-        done(fallbackCopy(text));
-      }
+  document.querySelectorAll('[data-copy]').forEach(function (button) {
+    button.addEventListener('click', async function () {
+      var text = button.dataset.copy;
+      var ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; }
+      catch (_) { ok = fallbackCopy(text); }
+      toast.textContent = ok ? '已复制：' + text : '复制失败，请手动选择号码';
+      toast.classList.add('is-show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('is-show'); }, 2200);
     });
   });
 
-  /* ---------- 卡片光斑跟随 ---------- */
-  document.querySelectorAll('.work-card').forEach(function (card) {
-    card.addEventListener('mousemove', function (ev) {
-      var r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (ev.clientY - r.top) + 'px');
-    });
-  });
-
-  /* ---------- 护盾视差倾斜 ---------- */
-  var shield = document.getElementById('shieldWrap');
-  if (shield && !reduceMotion) {
-    var hero = document.getElementById('home');
-    hero.addEventListener('mousemove', function (ev) {
-      var r = hero.getBoundingClientRect();
-      var dx = (ev.clientX - r.width / 2) / r.width;
-      var dy = (ev.clientY - r.height / 2) / r.height;
-      shield.style.transform = 'perspective(900px) rotateY(' + (dx * 9) + 'deg) rotateX(' + (-dy * 9) + 'deg)';
-    });
-    hero.addEventListener('mouseleave', function () { shield.style.transform = ''; });
-  }
-
-  /* ---------- 光标光晕（CSS transition，无 rAF） ---------- */
-  var glow = document.getElementById('cursorGlow');
-  if (glow && !reduceMotion) {
-    glow.style.transition = 'transform 0.35s cubic-bezier(.25,.8,.25,1), opacity 0.3s';
-    window.addEventListener('mousemove', function (ev) {
-      glow.style.transform = 'translate(' + ev.clientX + 'px,' + ev.clientY + 'px)';
-      glow.style.opacity = '1';
+  /* A single rendered globe texture. No render loop, no WebGL, no network assets. */
+  var canvas = document.getElementById('globe');
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  var radians = Math.PI / 180;
+  // Low-detail geographic silhouettes are sufficient for a background at this scale.
+  var land = [
+    [[-168,70],[-140,72],[-125,60],[-125,48],[-118,32],[-101,20],[-83,9],[-77,24],[-62,45],[-52,52],[-64,60],[-96,72]],
+    [[-80,10],[-65,10],[-50,0],[-35,-8],[-42,-23],[-54,-35],[-68,-55],[-76,-38],[-80,-10]],
+    [[-18,35],[7,37],[32,30],[43,12],[51,10],[41,-15],[31,-35],[17,-35],[10,-20],[-1,5],[-16,15]],
+    [[-10,36],[-9,59],[7,71],[34,70],[65,74],[110,73],[145,63],[180,65],[170,51],[142,43],[130,30],[117,22],[108,5],[98,8],[90,23],[78,8],[68,24],[53,27],[44,12],[36,30],[27,41],[14,44],[2,43]],
+    [[113,-11],[133,-12],[143,-20],[153,-27],[146,-39],[130,-34],[114,-28]],
+    [[47,-13],[51,-16],[48,-26],[44,-24]],
+    [[130,32],[138,34],[143,44],[146,43],[141,33]],
+    [[95,5],[106,-6],[119,-8],[124,-4],[113,0]],
+    [[-53,60],[-28,69],[-22,82],[-48,83],[-62,75]],
+    [[-8,50],[-4,59],[1,58],[1,51]]
+  ];
+  function isLand(lon, lat) {
+    return land.some(function (polygon) {
+      var inside = false;
+      for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        var a = polygon[i], b = polygon[j];
+        if (((a[1] > lat) !== (b[1] > lat)) && lon < (b[0] - a[0]) * (lat - a[1]) / (b[1] - a[1]) + a[0]) inside = !inside;
+      }
+      return inside;
     });
   }
-
-  /* ---------- 背景：静态地球（一次性绘制） ---------- */
-  var globe = document.getElementById('globe');
-  var fx = document.getElementById('fx');
-  if (fx) fx.style.display = 'none';
-
-  var W = 0, H = 0, DPR = 1;
-  function resize() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
-    globe.width = W * DPR; globe.height = H * DPR;
-    globe.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0);
-    drawGlobe();
+  function project(lon, lat, center, radius) {
+    var longitude = (lon - 60) * radians;
+    var latitude = lat * radians;
+    var x = Math.cos(latitude) * Math.sin(longitude);
+    var y = -Math.sin(latitude);
+    var z = Math.cos(latitude) * Math.cos(longitude);
+    var tilt = -.16;
+    var yy = y * Math.cos(tilt) - x * Math.sin(tilt);
+    var xx = y * Math.sin(tilt) + x * Math.cos(tilt);
+    return { x: center + xx * radius, y: center + yy * radius, z: z };
   }
+  function draw() {
+    var size = canvas.clientWidth;
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    canvas.width = Math.round(size * dpr);
+    canvas.height = Math.round(size * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var c = size / 2, radius = size * .395;
+    var atmosphere = ctx.createRadialGradient(c, c, radius * .97, c, c, radius * 1.17);
+    atmosphere.addColorStop(0, 'rgba(25,114,193,.02)');
+    atmosphere.addColorStop(.27, 'rgba(44,142,222,.17)');
+    atmosphere.addColorStop(.6, 'rgba(31,107,184,.055)');
+    atmosphere.addColorStop(1, 'rgba(15,58,104,0)');
+    ctx.fillStyle = atmosphere;
+    ctx.fillRect(0, 0, size, size);
+    var sphere = ctx.createRadialGradient(c + radius * .45, c - radius * .35, 0, c, c, radius);
+    sphere.addColorStop(0, '#123258');
+    sphere.addColorStop(.6, '#0b2241');
+    sphere.addColorStop(1, '#071527');
+    ctx.fillStyle = sphere;
+    ctx.beginPath(); ctx.arc(c, c, radius, 0, Math.PI * 2); ctx.fill();
 
-  var N = 800;
-  var pts = [];
-  (function () {
-    var ga = Math.PI * (3 - Math.sqrt(5));
-    for (var i = 0; i < N; i++) {
-      var y = 1 - (i / (N - 1)) * 2;
-      var r = Math.sqrt(Math.max(0, 1 - y * y));
-      var th = ga * i;
-      pts.push([Math.cos(th) * r, y, Math.sin(th) * r]);
+    function line(points) {
+      var started = false;
+      ctx.beginPath();
+      points.forEach(function (point) {
+        var p = project(point[0], point[1], c, radius);
+        if (p.z < 0) { started = false; return; }
+        if (!started) { ctx.moveTo(p.x, p.y); started = true; }
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
     }
-  })();
-
-  var arcs = [];
-  (function () {
-    for (var i = 0; i < 10; i++) {
-      var a = pts[(Math.random() * N) | 0];
-      var b = pts[(Math.random() * N) | 0];
-      arcs.push({ a: a, b: b, phase: Math.random() });
+    ctx.strokeStyle = 'rgba(100,170,225,.12)'; ctx.lineWidth = .65;
+    for (var lat = -60; lat <= 60; lat += 20) {
+      var horizontal = [];
+      for (var lon = -180; lon <= 180; lon += 3) horizontal.push([lon, lat]);
+      line(horizontal);
     }
-  })();
-
-  var TILT = 0.42;
-  var ANG = 0.8;
-
-  function rotate(p) {
-    var ca = Math.cos(ANG), sa = Math.sin(ANG);
-    var x = p[0] * ca + p[2] * sa;
-    var z = -p[0] * sa + p[2] * ca;
-    var ct = Math.cos(TILT), st = Math.sin(TILT);
-    var y = p[1] * ct - z * st;
-    var z2 = p[1] * st + z * ct;
-    return [x, y, z2];
-  }
-
-  function slerp(a, b, t) {
-    var dot = Math.min(1, Math.max(-1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
-    var om = Math.acos(dot);
-    if (om < 1e-4) return a;
-    var so = Math.sin(om);
-    var k1 = Math.sin((1 - t) * om) / so;
-    var k2 = Math.sin(t * om) / so;
-    return [a[0] * k1 + b[0] * k2, a[1] * k1 + b[1] * k2, a[2] * k1 + b[2] * k2];
-  }
-
-  function drawGlobe() {
-    var gctx = globe.getContext('2d');
-    gctx.clearRect(0, 0, W, H);
-    var cx = W * 0.60;
-    var cy = H * 0.52;
-    var R = Math.min(W, H) * 0.60;
-
-    var halo = gctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, R * 1.3);
-    halo.addColorStop(0, 'rgba(29, 84, 178, 0.40)');
-    halo.addColorStop(0.6, 'rgba(16, 52, 122, 0.24)');
-    halo.addColorStop(1, 'rgba(4, 7, 15, 0)');
-    gctx.fillStyle = halo;
-    gctx.beginPath();
-    gctx.arc(cx, cy, R * 1.3, 0, Math.PI * 2);
-    gctx.fill();
-
-    gctx.lineWidth = 1;
-    var lat, lon, s, p, x, y, started;
-    for (lat = -60; lat <= 60; lat += 30) {
-      var phi = lat * Math.PI / 180;
-      var ry = Math.sin(phi), rr = Math.cos(phi);
-      gctx.beginPath(); started = false;
-      for (s = 0; s <= 48; s++) {
-        var th = s / 48 * Math.PI * 2;
-        p = rotate([rr * Math.cos(th), ry, rr * Math.sin(th)]);
-        if (p[2] < -0.05) { started = false; continue; }
-        x = cx + p[0] * R; y = cy + p[1] * R;
-        if (!started) { gctx.moveTo(x, y); started = true; } else gctx.lineTo(x, y);
-      }
-      gctx.strokeStyle = 'rgba(56, 189, 248, 0.13)';
-      gctx.stroke();
+    for (var meridian = -180; meridian < 180; meridian += 20) {
+      var vertical = [];
+      for (var parallel = -90; parallel <= 90; parallel += 3) vertical.push([meridian, parallel]);
+      line(vertical);
     }
-    for (lon = 0; lon < 180; lon += 30) {
-      var l = lon * Math.PI / 180;
-      gctx.beginPath(); started = false;
-      for (s = 0; s <= 48; s++) {
-        var ph = s / 48 * Math.PI * 2;
-        p = rotate([Math.cos(ph) * Math.cos(l), Math.sin(ph), Math.cos(ph) * Math.sin(l)]);
-        if (p[2] < -0.05) { started = false; continue; }
-        x = cx + p[0] * R; y = cy + p[1] * R;
-        if (!started) { gctx.moveTo(x, y); started = true; } else gctx.lineTo(x, y);
-      }
-      gctx.strokeStyle = 'rgba(37, 99, 235, 0.13)';
-      gctx.stroke();
-    }
-
-    for (var i = 0; i < N; i++) {
-      var q = rotate(pts[i]);
-      var d = q[2];
-      var sx = cx + q[0] * R;
-      var sy = cy + q[1] * R;
-      var alpha = 0.10 + (d + 1) * 0.36;
-      var size = 0.7 + (d + 1) * 0.75;
-      gctx.fillStyle = d > 0.15
-        ? 'rgba(125, 211, 252,' + alpha.toFixed(3) + ')'
-        : 'rgba(59, 130, 246,' + (alpha * 0.75).toFixed(3) + ')';
-      gctx.fillRect(sx, sy, size, size);
-    }
-
-    var rim = gctx.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.08);
-    rim.addColorStop(0, 'rgba(56, 189, 248, 0)');
-    rim.addColorStop(0.72, 'rgba(56, 189, 248, 0.20)');
-    rim.addColorStop(1, 'rgba(56, 189, 248, 0)');
-    gctx.fillStyle = rim;
-    gctx.beginPath();
-    gctx.arc(cx, cy, R * 1.08, 0, Math.PI * 2);
-    gctx.fill();
-
-    for (var k = 0; k < arcs.length; k++) {
-      var arc = arcs[k];
-      gctx.beginPath();
-      started = false;
-      for (s = 0; s <= 20; s++) {
-        var q2 = rotate(slerp(arc.a, arc.b, s / 20));
-        if (q2[2] < -0.15) { started = false; continue; }
-        var qx = cx + q2[0] * R;
-        var qy = cy + q2[1] * R;
-        if (!started) { gctx.moveTo(qx, qy); started = true; }
-        else gctx.lineTo(qx, qy);
-      }
-      gctx.strokeStyle = 'rgba(56, 189, 248, 0.20)';
-      gctx.lineWidth = 1;
-      gctx.stroke();
-
-      var hp = rotate(slerp(arc.a, arc.b, arc.phase));
-      if (hp[2] > -0.1) {
-        var hx = cx + hp[0] * R;
-        var hy = cy + hp[1] * R;
-        var pg = gctx.createRadialGradient(hx, hy, 0, hx, hy, 7);
-        pg.addColorStop(0, 'rgba(186, 230, 253, 0.95)');
-        pg.addColorStop(1, 'rgba(56, 189, 248, 0)');
-        gctx.fillStyle = pg;
-        gctx.beginPath();
-        gctx.arc(hx, hy, 7, 0, Math.PI * 2);
-        gctx.fill();
+    // Dotted continents create a recognisable Earth while keeping the texture light.
+    for (var latitude = -56; latitude < 82; latitude += 2.8) {
+      for (var longitude = -178; longitude < 180; longitude += 2.8 / Math.max(.4, Math.cos(latitude * radians))) {
+        if (!isLand(longitude, latitude)) continue;
+        var p = project(longitude, latitude, c, radius);
+        if (p.z <= .015) continue;
+        var alpha = .12 + p.z * .29;
+        ctx.fillStyle = 'rgba(112,195,239,' + alpha + ')';
+        ctx.beginPath(); ctx.arc(p.x, p.y, size * .00115, 0, Math.PI * 2); ctx.fill();
       }
     }
+    ctx.strokeStyle = 'rgba(96,187,242,.26)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(c, c, radius, 0, Math.PI * 2); ctx.stroke();
+    // A few great-circle routes, rather than hundreds of foreground particles.
+    ctx.strokeStyle = 'rgba(90,174,230,.18)'; ctx.lineWidth = .8;
+    [[-10,50,125,35],[20,-30,115,40],[-20,0,140,55]].forEach(function (route) {
+      var arc = [];
+      for (var i = 0; i <= 60; i++) {
+        var t = i / 60;
+        arc.push([route[0] + (route[2] - route[0]) * t, route[1] + (route[3] - route[1]) * t + Math.sin(t * Math.PI) * 15]);
+      }
+      line(arc);
+    });
   }
-
-  resize();
-  window.addEventListener('resize', resize);
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(draw, 160);
+  }, { passive: true });
+  draw();
 })();
