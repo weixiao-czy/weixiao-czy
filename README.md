@@ -16,10 +16,17 @@
 
 ### 📌 Pinned Projects | 精选置顶项目
 <!-- PINNED_START -->
+<div align="left">
+  <a href="https://github.com/weixiao-czy/data_base_agent"><img width="48%" src="https://github-readme-stats.vercel.app/api/pin/?username=weixiao-czy&repo=data_base_agent&theme=tokyonight&hide_border=true" alt="data_base_agent" /></a>
+</div>
 <!-- PINNED_END -->
 
 ### ⚡ Recent Updates | 最近活跃仓库
 <!-- RECENT_START -->
+- **[weixiao-czy](https://github.com/weixiao-czy/weixiao-czy)** `Python` (⭐ 0) — my profile *(更新于 2026-10-26)*
+- **[data_base_agent](https://github.com/weixiao-czy/data_base_agent)** `Python` (⭐ 3) — 一款为中国大学学生提供的图书馆文献数据库检索agent工具 *(更新于 2026-10-25)*
+- **[weixiao-czy.github.io](https://github.com/weixiao-czy/weixiao-czy.github.io)** `HTML` (⭐ 0) — A website of myself *(更新于 2026-10-22)*
+- **[memlens](https://github.com/weixiao-czy/memlens)** `Python` (⭐ 0) — A safety llm-based tool designed for C/C++ diffs,finding potential CWE safety issues *(更新于 2026-10-13)*
 <!-- RECENT_END -->
 
 ---
