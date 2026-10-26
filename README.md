@@ -14,23 +14,13 @@
 
 ---
 
-### 🚀 Featured Project | 旗舰开源项目
+### 📌 Pinned Projects | 精选置顶项目
+<!-- PINNED_START -->
+<!-- PINNED_END -->
 
-#### 🔍 [data_base_agent](https://github.com/weixiao-czy/data_base_agent) — *AI-Powered Literature Search & Intent Translation Agent*
-> **拒绝无效检索：** 将模糊的科研想法，通过多轮对话转化为结构化检索计划卡片與交互式三层文献图谱。
-
-- **Core Workflow**: 多轮对话澄清科研需求 $\rightarrow$ 自动生成结构化检索方案卡片 $\rightarrow$ 渲染交互式 HTML 三层文献图谱。
-- **Tech Highlights**: 
-  - 🔌 支持 **MCP 协议**与主流大模型 API 接入。
-  - 🛡️ 内置 **Crossref + arXiv** 多源检索与自动降级链路（Fallback Chain）。
-  - 🖥️ 双端支持：提供轻量级 **CLI** 与基于 **PySide** 的桌面级 **GUI**（支持 PyInstaller 独立打包分发）。
-- 👥 **Co-built with**: [@SunSean-1145](https://github.com/SunSean-1145) & [@CNOFNee](https://github.com/CNOFNee)
-
-<div align="left">
-  <a href="https://github.com/weixiao-czy/data_base_agent">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=weixiao-czy&repo=data_base_agent&theme=tokyonight&hide_border=true" alt="data_base_agent card" />
-  </a>
-</div>
+### ⚡ Recent Updates | 最近活跃仓库
+<!-- RECENT_START -->
+<!-- RECENT_END -->
 
 ---
 
