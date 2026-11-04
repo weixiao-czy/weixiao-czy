@@ -54,7 +54,7 @@ def build_pinned_section(pinned_nodes):
     for repo in pinned_nodes:
         name = repo["name"]
         url = repo["url"]
-        card_img = f"https://github-readme-stats.vercel.app/api/pin/?username={USERNAME}&repo={name}&theme=tokyonight&hide_border=true"
+        card_img = f"https://opengraph.githubassets.com/1/{USERNAME}/{name}"
         cards.append(f'  <a href="{url}"><img width="48%" src="{card_img}" alt="{name}" /></a>')
     cards.append("</div>")
     return "\n".join(cards)

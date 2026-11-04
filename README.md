@@ -17,7 +17,7 @@
 ### 📌 Pinned Projects | 精选置顶项目
 <!-- PINNED_START -->
 <div align="left">
-  <a href="https://github.com/weixiao-czy/data_base_agent"><img width="48%" src="https://github-readme-stats.vercel.app/api/pin/?username=weixiao-czy&repo=data_base_agent&theme=tokyonight&hide_border=true" alt="data_base_agent" /></a>
+  <a href="https://github.com/weixiao-czy/data_base_agent"><img width="48%" src="https://opengraph.githubassets.com/1/weixiao-czy/data_base_agent" alt="data_base_agent" /></a>
 </div>
 <!-- PINNED_END -->
 
