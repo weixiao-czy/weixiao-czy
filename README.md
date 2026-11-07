@@ -25,7 +25,7 @@
 <!-- RECENT_START -->
 - **[weixiao-czy](https://github.com/weixiao-czy/weixiao-czy)** `Python` (⭐ 0) — my profile *(更新于 2026-11-04)*
 - **[weixiao-czy.github.io](https://github.com/weixiao-czy/weixiao-czy.github.io)** `CSS` (⭐ 0) — A website of myself *(更新于 2026-10-27)*
-- **[data_base_agent](https://github.com/weixiao-czy/data_base_agent)** `Python` (⭐ 4) — 一款为中国大学学生提供的图书馆文献数据库检索agent工具 *(更新于 2026-10-25)*
+- **[data_base_agent](https://github.com/weixiao-czy/data_base_agent)** `Python` (⭐ 5) — 一款为中国大学学生提供的图书馆文献数据库检索agent工具 *(更新于 2026-10-25)*
 - **[memlens](https://github.com/weixiao-czy/memlens)** `Python` (⭐ 1) — A safety llm-based tool designed for C/C++ diffs,finding potential CWE safety issues *(更新于 2026-10-13)*
 <!-- RECENT_END -->
 
