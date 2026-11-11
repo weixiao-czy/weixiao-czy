@@ -50,11 +50,15 @@ def fetch_github_data():
 def build_pinned_section(pinned_nodes):
     if not pinned_nodes:
         return "_暂无置顶项目_"
-    cards = ['<div align="left">']
+    # 改为居中对齐
+    cards = ['<div align="center">']
     for repo in pinned_nodes:
         name = repo["name"]
         url = repo["url"]
-        card_img = f"https://opengraph.githubassets.com/1/{USERNAME}/{name}"
+        # ✅ 关键修改：将原生的 opengraph 换为 github-stats-extended 的 pin 接口
+        # 并统一添加 tokyonight 主题和隐藏边框，与你的统计图风格保持一致
+        card_img = f"https://github-stats-extended.vercel.app/api/pin/?username={USERNAME}&repo={name}&theme=tokyonight&hide_border=true"
+        
         cards.append(f'  <a href="{url}"><img width="48%" src="{card_img}" alt="{name}" /></a>')
     cards.append("</div>")
     return "\n".join(cards)
